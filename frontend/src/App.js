@@ -100,13 +100,16 @@ function App() {
       <div className="App">
         <BrowserRouter>
           <Routes>
+            {/* Landing Page */}
+            <Route path="/" element={<LandingPage />} />
+            
             {/* Separate Login Routes */}
             <Route path="/super-admin-login" element={<SuperAdminLogin />} />
             <Route path="/login" element={<TurfAdminLogin />} />
             
-            {/* Default route */}
+            {/* Dashboard redirect for authenticated users */}
             <Route
-              path="/"
+              path="/home"
               element={
                 <ProtectedRoute>
                   <DashboardRedirect />
