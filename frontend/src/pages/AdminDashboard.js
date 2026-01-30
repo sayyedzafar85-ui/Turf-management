@@ -21,6 +21,17 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Refresh when page becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchDashboardData();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
   const fetchDashboardData = async () => {
     try {
       const response = await axios.get(`${API}/dashboard/admin`);
