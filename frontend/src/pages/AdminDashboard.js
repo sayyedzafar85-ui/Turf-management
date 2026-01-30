@@ -87,7 +87,7 @@ export default function AdminDashboard() {
                 <Calendar className="text-primary" size={20} />
               </div>
             </div>
-            <p className="text-2xl md:text-4xl font-heading font-bold text-white">{stats?.today_bookings_count || 0}</p>
+            <p className="text-2xl md:text-4xl font-heading font-bold text-white">{stats?.today_bookings_count ?? 0}</p>
             <p className="text-xs md:text-sm text-slate-400 uppercase tracking-wider mt-1">Today's Bookings</p>
           </div>
 
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
                 <DollarSign className="text-accent" size={20} />
               </div>
             </div>
-            <p className="text-2xl md:text-4xl font-heading font-bold text-white">₹{stats?.today_income?.toLocaleString() || 0}</p>
+            <p className="text-2xl md:text-4xl font-heading font-bold text-white">₹{(stats?.today_income ?? 0).toLocaleString()}</p>
             <p className="text-xs md:text-sm text-slate-400 uppercase tracking-wider mt-1">Today's Income</p>
           </div>
 
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
                 <Clock className="text-secondary" size={20} />
               </div>
             </div>
-            <p className="text-2xl md:text-4xl font-heading font-bold text-white">{stats?.available_slots_today || 0}</p>
+            <p className="text-2xl md:text-4xl font-heading font-bold text-white">{stats?.available_slots_today ?? 0}</p>
             <p className="text-xs md:text-sm text-slate-400 uppercase tracking-wider mt-1">Available Slots</p>
           </div>
 
@@ -117,7 +117,7 @@ export default function AdminDashboard() {
                 <AlertCircle className="text-yellow-400" size={20} />
               </div>
             </div>
-            <p className="text-2xl md:text-4xl font-heading font-bold text-white">{stats?.pending_payments_count || 0}</p>
+            <p className="text-2xl md:text-4xl font-heading font-bold text-white">{stats?.pending_payments_count ?? 0}</p>
             <p className="text-xs md:text-sm text-slate-400 uppercase tracking-wider mt-1">Pending Payments</p>
           </div>
         </div>
