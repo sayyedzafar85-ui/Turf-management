@@ -13,6 +13,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -32,14 +33,24 @@ export default function AdminDashboard() {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (manual = false) => {
+    if (manual) {
+      setRefreshing(true);
+    }
     try {
       const response = await axios.get(`${API}/dashboard/admin`);
       setStats(response.data);
+      if (manual) {
+        toast.success('Dashboard refreshed!');
+      }
     } catch (error) {
       toast.error('Failed to load dashboard data');
+      console.error('Dashboard error:', error);
     } finally {
       setLoading(false);
+      if (manual) {
+        setRefreshing(false);
+      }
     }
   };
 
