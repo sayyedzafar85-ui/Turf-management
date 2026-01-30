@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../App';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { Calendar, DollarSign, Clock, AlertCircle, TrendingUp } from 'lucide-react';
+import { Calendar, DollarSign, Clock, AlertCircle, TrendingUp, RefreshCw } from 'lucide-react';
 import { API } from '../App';
 import MobileNav from '../components/MobileNav';
 import Header from '../components/Header';
