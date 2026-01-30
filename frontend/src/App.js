@@ -5,7 +5,8 @@ import { Toaster } from 'sonner';
 import '@/App.css';
 
 // Pages
-import Login from './pages/Login';
+import SuperAdminLogin from './pages/SuperAdminLogin';
+import TurfAdminLogin from './pages/TurfAdminLogin';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import BookingManagement from './pages/BookingManagement';
@@ -98,8 +99,11 @@ function App() {
       <div className="App">
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            {/* Separate Login Routes */}
+            <Route path="/super-admin-login" element={<SuperAdminLogin />} />
+            <Route path="/login" element={<TurfAdminLogin />} />
             
+            {/* Default route */}
             <Route
               path="/"
               element={
@@ -109,6 +113,7 @@ function App() {
               }
             />
             
+            {/* Super Admin Routes */}
             <Route
               path="/super-admin"
               element={
@@ -118,6 +123,7 @@ function App() {
               }
             />
             
+            {/* Turf Admin Routes */}
             <Route
               path="/dashboard"
               element={
