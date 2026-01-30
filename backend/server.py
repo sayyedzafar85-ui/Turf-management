@@ -410,14 +410,15 @@ async def create_booking(booking: BookingCreate, current_user: dict = Depends(ge
             }
         )
     else:
-        await db.customers.insert_one({
+        customer_doc = {
             "turf_name": turf_name,
             "customer_name": booking.customer_name,
             "customer_mobile": booking.customer_mobile,
             "visit_count": 1,
             "total_spent": booking.total_amount,
             "last_booking_date": booking.date
-        })
+        }
+        await db.customers.insert_one(customer_doc)
     
     return {"message": "Booking created successfully", "booking": booking_data}
 
