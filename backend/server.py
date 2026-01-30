@@ -392,7 +392,8 @@ async def create_booking(booking: BookingCreate, current_user: dict = Depends(ge
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
-    await db.bookings.insert_one(booking_data)
+    result = await db.bookings.insert_one(booking_data)
+    booking_data.pop("_id", None)  # Remove MongoDB _id before returning
     
     # Update customer records
     customer = await db.customers.find_one(
