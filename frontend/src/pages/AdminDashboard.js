@@ -67,6 +67,18 @@ export default function AdminDashboard() {
       <Header title={user?.turf_name || 'Dashboard'} subtitle="Today's Overview" />
 
       <div className="container mx-auto px-4 py-6 md:py-8">
+        {/* Refresh Button */}
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => fetchDashboardData(true)}
+            disabled={refreshing}
+            data-testid="refresh-dashboard-button"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium disabled:opacity-50"
+          >
+            <RefreshCw className={refreshing ? 'animate-spin' : ''} size={16} />
+            {refreshing ? 'Refreshing...' : 'Refresh'}
+          </button>
+        </div>
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
           <div className="glassmorphism rounded-xl p-4 md:p-6 card-hover" data-testid="today-bookings-card">
