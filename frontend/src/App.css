@@ -1,34 +1,71 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Mobile-first styles */
+.App {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #020617, #0F172A);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+/* No center alignment - natural reading flow */
+.container {
+  max-width: 100%;
+  padding: 0 1rem;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
 }
 
-.App-link {
-    color: #61dafb;
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+/* Button animations */
+.btn-primary {
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.1s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: border-color 0.3s;
+}
+
+.card-hover:hover {
+  border-color: rgba(57, 255, 20, 0.5);
+}
+
+/* Slot grid animations */
+.slot-item {
+  transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+}
+
+.slot-item:active {
+  transform: scale(0.95);
+}
+
+/* Input focus */
+.input-focus {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
