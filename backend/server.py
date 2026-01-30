@@ -244,8 +244,11 @@ async def admin_dashboard(current_user: dict = Depends(get_current_user)):
         {"_id": 0}
     ).to_list(None)
     
-    # Today's income
-    today_income = sum([b["total_amount"] for b in today_bookings])
+    # Today's income (total revenue from bookings)
+    today_total_revenue = sum([b["total_amount"] for b in today_bookings])
+    
+    # Today's collected amount (actual cash received)
+    today_collected = sum([b["advance_paid"] for b in today_bookings])
     
     # Pending payments
     pending_payments = await db.bookings.find(
@@ -265,7 +268,9 @@ async def admin_dashboard(current_user: dict = Depends(get_current_user)):
     
     return {
         "today_bookings_count": len(today_bookings),
-        "today_income": today_income,
+        "today_income": today_total_revenue,
+        "today_collected": today_collected,
+        "today_pending": today_total_revenue - today_collected,
         "pending_payments_count": len(pending_payments),
         "pending_amount": sum([b.get("balance_pending", 0) for b in pending_payments]),
         "available_slots_today": available_count,
