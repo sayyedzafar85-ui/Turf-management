@@ -5,6 +5,7 @@ import { Toaster } from 'sonner';
 import '@/App.css';
 
 // Pages
+import LandingPage from './pages/LandingPage';
 import SuperAdminLogin from './pages/SuperAdminLogin';
 import TurfAdminLogin from './pages/TurfAdminLogin';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
