@@ -97,8 +97,9 @@ export default function AdminDashboard() {
                 <DollarSign className="text-accent" size={20} />
               </div>
             </div>
-            <p className="text-2xl md:text-4xl font-heading font-bold text-white">₹{(stats?.today_income ?? 0).toLocaleString()}</p>
-            <p className="text-xs md:text-sm text-slate-400 uppercase tracking-wider mt-1">Today's Income</p>
+            <p className="text-xl md:text-3xl font-heading font-bold text-white">₹{(stats?.today_income ?? 0).toLocaleString()}</p>
+            <p className="text-xs text-slate-500 mt-1">Collected: ₹{(stats?.today_collected ?? 0).toLocaleString()}</p>
+            <p className="text-xs md:text-sm text-slate-400 uppercase tracking-wider mt-1">Total Revenue</p>
           </div>
 
           <div className="glassmorphism rounded-xl p-4 md:p-6 card-hover" data-testid="available-slots-card">
@@ -118,7 +119,8 @@ export default function AdminDashboard() {
               </div>
             </div>
             <p className="text-2xl md:text-4xl font-heading font-bold text-white">{stats?.pending_payments_count ?? 0}</p>
-            <p className="text-xs md:text-sm text-slate-400 uppercase tracking-wider mt-1">Pending Payments</p>
+            <p className="text-xs text-yellow-400 mt-1">₹{(stats?.pending_amount ?? 0).toLocaleString()}</p>
+            <p className="text-xs md:text-sm text-slate-400 uppercase tracking-wider mt-1">Pending</p>
           </div>
         </div>
 
