@@ -468,6 +468,7 @@ async def create_booking(booking: BookingCreate, current_user: dict = Depends(ge
         "slot_time": booking.slot_time,
         "customer_name": booking.customer_name,
         "customer_mobile": booking.customer_mobile,
+        "customer_email": booking.customer_email,
         "total_amount": booking.total_amount,
         "advance_paid": booking.advance_paid,
         "balance_pending": booking.total_amount - booking.advance_paid,
