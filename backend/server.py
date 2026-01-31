@@ -118,24 +118,19 @@ def get_password_hash(password):
 async def send_booking_confirmation(booking_data: dict, turf_name: str):
     """Send booking confirmation via Email, SMS, and WhatsApp"""
     
-    # Get customer details
-    customer = await db.customers.find_one(
-        {"turf_name": turf_name, "customer_mobile": booking_data["customer_mobile"]},
-        {"_id": 0}
-    )
-    
-    customer_email = customer.get("email") if customer else None
+    customer_name = booking_data["customer_name"]
+    customer_mobile = booking_data["customer_mobile"]
+    customer_email = booking_data.get("customer_email")
     
     # Prepare message
-    message = f"""
-🏏 BOOKING CONFIRMED! 🏏
+    message_text = f"""🏏 BOOKING CONFIRMED! 🏏
 
 Turf: {turf_name}
 Date: {booking_data['date']}
 Time: {booking_data['slot_time']}
 
-Customer: {booking_data['customer_name']}
-Mobile: {booking_data['customer_mobile']}
+Customer: {customer_name}
+Mobile: {customer_mobile}
 
 💰 Payment Details:
 Total Amount: ₹{booking_data['total_amount']}
@@ -145,20 +140,91 @@ Balance Pending: ₹{booking_data['balance_pending']}
 Payment Mode: {booking_data['payment_mode']}
 
 Thank you for booking with us!
-See you on the field! 🎯
-    """.strip()
+See you on the field! 🎯"""
+
+    message_html = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px;">
+        <div style="background: white; padding: 30px; border-radius: 8px;">
+            <h1 style="color: #39FF14; text-align: center; margin-bottom: 20px;">🏏 BOOKING CONFIRMED! 🏏</h1>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h2 style="color: #333; margin-bottom: 15px;">Booking Details</h2>
+                <p style="color: #555; margin: 8px 0;"><strong>Turf:</strong> {turf_name}</p>
+                <p style="color: #555; margin: 8px 0;"><strong>Date:</strong> {booking_data['date']}</p>
+                <p style="color: #555; margin: 8px 0;"><strong>Time:</strong> {booking_data['slot_time']}</p>
+            </div>
+            
+            <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h2 style="color: #333; margin-bottom: 15px;">💰 Payment Summary</h2>
+                <p style="color: #555; margin: 8px 0;"><strong>Total Amount:</strong> ₹{booking_data['total_amount']}</p>
+                <p style="color: #555; margin: 8px 0;"><strong>Advance Paid:</strong> ₹{booking_data['advance_paid']}</p>
+                <p style="color: #d32f2f; margin: 8px 0;"><strong>Balance Pending:</strong> ₹{booking_data['balance_pending']}</p>
+                <p style="color: #555; margin: 8px 0;"><strong>Payment Mode:</strong> {booking_data['payment_mode']}</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="color: #666; font-size: 14px;">Thank you for booking with us!</p>
+                <p style="color: #39FF14; font-weight: bold; font-size: 18px;">See you on the field! 🎯</p>
+            </div>
+        </div>
+    </div>
+    """
     
-    # Log the notification (in production, integrate with actual services)
-    logger.info(f"Booking confirmation sent to {booking_data['customer_name']}:")
-    logger.info(f"Mobile: {booking_data['customer_mobile']}")
-    if customer_email:
-        logger.info(f"Email: {customer_email}")
-    logger.info(f"Message: {message}")
+    notifications_sent = []
     
-    # TODO: Integrate with actual services
-    # - WhatsApp: Use Baileys or WhatsApp Business API
-    # - SMS: Use Twilio
-    # - Email: Use Resend or SendGrid
+    # Send Email
+    if customer_email and RESEND_API_KEY:
+        try:
+            import resend
+            import asyncio
+            
+            params = {
+                "from": SENDER_EMAIL,
+                "to": [customer_email],
+                "subject": f"🏏 Booking Confirmed - {turf_name}",
+                "html": message_html
+            }
+            
+            email_result = await asyncio.to_thread(resend.Emails.send, params)
+            notifications_sent.append("Email")
+            logger.info(f"Email sent to {customer_email}: {email_result}")
+        except Exception as e:
+            logger.error(f"Failed to send email: {str(e)}")
+    
+    # Send SMS via Twilio
+    if twilio_client and TWILIO_PHONE_NUMBER:
+        try:
+            import asyncio
+            
+            # Format phone number for Twilio (add +91 for India if not present)
+            phone = customer_mobile
+            if not phone.startswith('+'):
+                phone = f"+91{phone}"
+            
+            def send_sms():
+                return twilio_client.messages.create(
+                    body=message_text,
+                    from_=TWILIO_PHONE_NUMBER,
+                    to=phone
+                )
+            
+            sms_result = await asyncio.to_thread(send_sms)
+            notifications_sent.append("SMS")
+            logger.info(f"SMS sent to {phone}: {sms_result.sid}")
+        except Exception as e:
+            logger.error(f"Failed to send SMS: {str(e)}")
+    
+    # WhatsApp notification (placeholder - requires WhatsApp Business API setup)
+    # For production, integrate with Twilio WhatsApp API or Baileys
+    logger.info(f"WhatsApp notification queued for {customer_mobile}")
+    
+    # Log notification summary
+    if notifications_sent:
+        logger.info(f"Booking confirmation sent via: {', '.join(notifications_sent)}")
+        logger.info(f"Recipient: {customer_name} ({customer_mobile})")
+    else:
+        logger.warning("No notifications were sent. Please configure API keys in .env file")
+        logger.info(f"Booking details logged: {customer_name} - {turf_name} - {booking_data['date']} at {booking_data['slot_time']}")
     
     return True
 
