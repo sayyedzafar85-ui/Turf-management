@@ -1,4 +1,4 @@
-import { Home, Calendar, DollarSign, Users, Settings, BarChart } from 'lucide-react';
+import { Home, Calendar, DollarSign, Users, Settings, BarChart, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function MobileNav({ role }) {
@@ -15,7 +15,7 @@ export default function MobileNav({ role }) {
         { path: '/dashboard', icon: Home, label: 'Home' },
         { path: '/bookings', icon: Calendar, label: 'Book' },
         { path: '/payments', icon: DollarSign, label: 'Pay' },
-        { path: '/customers', icon: Users, label: 'Customers' },
+        { path: '/profile', icon: User, label: 'Profile' },
       ];
 
   if (role === 'admin') {
