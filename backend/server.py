@@ -429,8 +429,15 @@ async def create_booking(booking: BookingCreate, current_user: dict = Depends(ge
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
-    result = await db.bookings.insert_one(booking_data)
+    await db.bookings.insert_one(booking_data)
     booking_data.pop("_id", None)  # Remove MongoDB _id before returning
+    
+    # Send booking confirmation notifications
+    try:
+        await send_booking_confirmation(booking_data, turf_name)
+    except Exception as e:
+        logger.error(f"Failed to send booking confirmation: {str(e)}")
+        # Don't fail the booking if notification fails
     
     # Update customer records
     customer = await db.customers.find_one(
