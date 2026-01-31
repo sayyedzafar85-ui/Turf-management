@@ -201,6 +201,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <NotificationSettings />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-center" richColors />
