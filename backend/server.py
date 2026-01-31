@@ -632,7 +632,7 @@ async def create_booking(booking: BookingCreate, current_user: dict = Depends(ge
         }
         await db.customers.insert_one(customer_doc)
     
-    return {"message": "Booking created successfully", "booking": booking_data}
+    return {"message": "Booking created successfully", "booking": booking_data, "notifications": notification_result}
 
 @api_router.get("/bookings")
 async def get_bookings(date: Optional[str] = None, current_user: dict = Depends(get_current_user)):
