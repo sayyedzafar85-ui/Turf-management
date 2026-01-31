@@ -171,8 +171,36 @@ See you on the field! 🎯"""
     </div>
     """
     
-    notifications_sent = []
+    notifications_sent = {
+        "email": {"status": "not_attempted", "message": "", "recipient": customer_email or "Not provided"},
+        "sms": {"status": "not_attempted", "message": "", "recipient": customer_mobile},
+        "whatsapp": {"status": "not_configured", "message": "WhatsApp requires additional setup", "recipient": customer_mobile}
+    }
     
+    # TEST MODE - Log everything
+    if NOTIFICATION_MODE == "TEST":
+        logger.info("=" * 80)
+        logger.info("📧 NOTIFICATION TEST MODE - Messages Preview")
+        logger.info("=" * 80)
+        logger.info(f"Customer: {customer_name}")
+        logger.info(f"Mobile: {customer_mobile}")
+        logger.info(f"Email: {customer_email or 'Not provided'}")
+        logger.info("-" * 80)
+        logger.info("MESSAGE CONTENT:")
+        logger.info(message_text)
+        logger.info("=" * 80)
+        
+        # Simulate sending
+        if customer_email:
+            notifications_sent["email"]["status"] = "test_mode"
+            notifications_sent["email"]["message"] = "✅ Would send email in PRODUCTION mode"
+        
+        notifications_sent["sms"]["status"] = "test_mode"
+        notifications_sent["sms"]["message"] = "✅ Would send SMS in PRODUCTION mode"
+        
+        return notifications_sent
+    
+    # PRODUCTION MODE - Actually send
     # Send Email
     if customer_email and RESEND_API_KEY:
         try:
@@ -187,10 +215,16 @@ See you on the field! 🎯"""
             }
             
             email_result = await asyncio.to_thread(resend.Emails.send, params)
-            notifications_sent.append("Email")
+            notifications_sent["email"]["status"] = "sent"
+            notifications_sent["email"]["message"] = f"✅ Email sent successfully (ID: {email_result.get('id', 'N/A')})"
             logger.info(f"Email sent to {customer_email}: {email_result}")
         except Exception as e:
+            notifications_sent["email"]["status"] = "failed"
+            notifications_sent["email"]["message"] = f"❌ Failed: {str(e)}"
             logger.error(f"Failed to send email: {str(e)}")
+    elif customer_email and not RESEND_API_KEY:
+        notifications_sent["email"]["status"] = "not_configured"
+        notifications_sent["email"]["message"] = "⚠️ Email service not configured (missing API key)"
     
     # Send SMS via Twilio
     if twilio_client and TWILIO_PHONE_NUMBER:
@@ -210,24 +244,18 @@ See you on the field! 🎯"""
                 )
             
             sms_result = await asyncio.to_thread(send_sms)
-            notifications_sent.append("SMS")
+            notifications_sent["sms"]["status"] = "sent"
+            notifications_sent["sms"]["message"] = f"✅ SMS sent successfully (SID: {sms_result.sid})"
             logger.info(f"SMS sent to {phone}: {sms_result.sid}")
         except Exception as e:
+            notifications_sent["sms"]["status"] = "failed"
+            notifications_sent["sms"]["message"] = f"❌ Failed: {str(e)}"
             logger.error(f"Failed to send SMS: {str(e)}")
-    
-    # WhatsApp notification (placeholder - requires WhatsApp Business API setup)
-    # For production, integrate with Twilio WhatsApp API or Baileys
-    logger.info(f"WhatsApp notification queued for {customer_mobile}")
-    
-    # Log notification summary
-    if notifications_sent:
-        logger.info(f"Booking confirmation sent via: {', '.join(notifications_sent)}")
-        logger.info(f"Recipient: {customer_name} ({customer_mobile})")
     else:
-        logger.warning("No notifications were sent. Please configure API keys in .env file")
-        logger.info(f"Booking details logged: {customer_name} - {turf_name} - {booking_data['date']} at {booking_data['slot_time']}")
+        notifications_sent["sms"]["status"] = "not_configured"
+        notifications_sent["sms"]["message"] = "⚠️ SMS service not configured (missing Twilio credentials)"
     
-    return True
+    return notifications_sent
 
 def create_access_token(data: dict):
     to_encode = data.copy()
