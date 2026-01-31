@@ -66,17 +66,19 @@ export default function BookingManagement() {
         slot_time: selectedSlot.time,
         customer_name: formData.customer_name,
         customer_mobile: formData.customer_mobile,
+        customer_email: formData.customer_email,
         total_amount: parseFloat(formData.total_amount),
         advance_paid: parseFloat(formData.advance_paid),
         payment_mode: formData.payment_mode,
       });
       
-      toast.success('Booking created successfully!');
+      toast.success('Booking confirmed! Customer will receive confirmation message.');
       setShowBookingForm(false);
       setSelectedSlot(null);
       setFormData({
         customer_name: '',
         customer_mobile: '',
+        customer_email: '',
         total_amount: '',
         advance_paid: '',
         payment_mode: 'Cash',
