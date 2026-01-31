@@ -134,6 +134,38 @@ async def create_super_admin():
         await db.users.insert_one(super_admin)
         logger.info("Super admin created: username=superadmin, password=Admin@123")
 
+# Profile Routes
+@api_router.get("/profile")
+async def get_profile(current_user: dict = Depends(get_current_user)):
+    # Return user profile without password
+    profile = {k: v for k, v in current_user.items() if k != "password"}
+    return profile
+
+@api_router.put("/profile")
+async def update_profile(
+    profile_data: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    # Fields that can be updated
+    allowed_fields = ["username", "email", "mobile", "address", "profile_photo"]
+    update_data = {k: v for k, v in profile_data.items() if k in allowed_fields}
+    
+    # Check if username is being changed and if it's already taken
+    if "username" in update_data and update_data["username"] != current_user["username"]:
+        existing = await db.users.find_one({"username": update_data["username"]})
+        if existing:
+            raise HTTPException(status_code=400, detail="Username already taken")
+    
+    # Update user profile
+    await db.users.update_one(
+        {"username": current_user["username"]},
+        {"$set": update_data}
+    )
+    
+    # Return updated profile
+    updated_user = await db.users.find_one({"username": update_data.get("username", current_user["username"])}, {"_id": 0, "password": 0})
+    return updated_user
+
 # Auth Routes
 @api_router.post("/auth/login", response_model=Token)
 async def login(login_data: LoginRequest):
