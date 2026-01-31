@@ -27,8 +27,9 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 
 # Environment variables for notifications
+NOTIFICATION_MODE = os.environ.get('NOTIFICATION_MODE', 'TEST')  # TEST or PRODUCTION
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
-SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'noreply@turfbooking.com')
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
 TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '')
