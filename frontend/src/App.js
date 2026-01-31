@@ -191,6 +191,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'staff']}'>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-center" richColors />
