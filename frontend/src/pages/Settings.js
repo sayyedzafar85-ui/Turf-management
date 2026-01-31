@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../App';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Settings as SettingsIcon, Save } from 'lucide-react';
 import { API } from '../App';
