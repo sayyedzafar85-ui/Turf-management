@@ -595,8 +595,9 @@ async def create_booking(booking: BookingCreate, current_user: dict = Depends(ge
     booking_data.pop("_id", None)  # Remove MongoDB _id before returning
     
     # Send booking confirmation notifications
+    notification_result = {"email": {}, "sms": {}, "whatsapp": {}}
     try:
-        await send_booking_confirmation(booking_data, turf_name)
+        notification_result = await send_booking_confirmation(booking_data, turf_name)
     except Exception as e:
         logger.error(f"Failed to send booking confirmation: {str(e)}")
         # Don't fail the booking if notification fails
