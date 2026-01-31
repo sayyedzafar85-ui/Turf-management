@@ -193,6 +193,20 @@ export default function Settings() {
             </button>
           </form>
         </div>
+
+        {/* Notification Settings Link */}
+        <div className="glassmorphism rounded-xl p-6 mt-6">
+          <h3 className="text-lg font-heading font-bold uppercase text-white mb-3">Notification Settings</h3>
+          <p className="text-sm text-slate-400 mb-4">
+            Configure Email, SMS & WhatsApp notifications for booking confirmations
+          </p>
+          <button
+            onClick={() => navigate('/notifications')}
+            className="w-full py-2 px-4 bg-slate-800 hover:bg-slate-700 text-white font-bold uppercase tracking-wider rounded-lg transition-colors text-sm"
+          >
+            Configure Notifications →
+          </button>
+        </div>
       </div>
 
       <MobileNav role={user?.role} />
