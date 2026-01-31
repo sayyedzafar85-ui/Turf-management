@@ -179,8 +179,22 @@ export default function BookingManagement() {
                   onChange={(e) => setFormData({ ...formData, customer_mobile: e.target.value })}
                   className="w-full px-4 py-2 bg-slate-900/50 border border-slate-800 rounded-lg text-white placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary/50 focus:outline-none"
                   pattern="[0-9]{10}"
+                  placeholder="10-digit mobile number"
                   required
                 />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2 uppercase tracking-wider">Email (Optional)</label>
+                <input
+                  type="email"
+                  data-testid="customer-email-input"
+                  value={formData.customer_email}
+                  onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-900/50 border border-slate-800 rounded-lg text-white placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary/50 focus:outline-none"
+                  placeholder="customer@example.com"
+                />
+                <p className="text-xs text-slate-500 mt-1">For booking confirmation via email</p>
               </div>
               
               <div>
