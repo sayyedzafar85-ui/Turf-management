@@ -61,7 +61,7 @@ export default function BookingManagement() {
     }
 
     try {
-      await axios.post(`${API}/bookings`, {
+      const response = await axios.post(`${API}/bookings`, {
         date: selectedDate,
         slot_time: selectedSlot.time,
         customer_name: formData.customer_name,
@@ -72,7 +72,30 @@ export default function BookingManagement() {
         payment_mode: formData.payment_mode,
       });
       
-      toast.success('Booking confirmed! Customer will receive confirmation message.');
+      const notifications = response.data.notifications;
+      
+      // Show success message
+      toast.success('Booking created successfully!', { duration: 3000 });
+      
+      // Show notification status
+      if (notifications) {
+        if (notifications.email?.status === 'sent') {
+          toast.success(`📧 Email sent to ${formData.customer_email}`, { duration: 5000 });
+        } else if (notifications.email?.status === 'test_mode') {
+          toast.info(`📧 Email: ${notifications.email.message}`, { duration: 5000 });
+        } else if (notifications.email?.message) {
+          toast.warning(`📧 Email: ${notifications.email.message}`, { duration: 5000 });
+        }
+        
+        if (notifications.sms?.status === 'sent') {
+          toast.success(`📱 SMS sent to ${formData.customer_mobile}`, { duration: 5000 });
+        } else if (notifications.sms?.status === 'test_mode') {
+          toast.info(`📱 SMS: ${notifications.sms.message}`, { duration: 5000 });
+        } else if (notifications.sms?.message) {
+          toast.warning(`📱 SMS: ${notifications.sms.message}`, { duration: 5000 });
+        }
+      }
+      
       setShowBookingForm(false);
       setSelectedSlot(null);
       setFormData({
