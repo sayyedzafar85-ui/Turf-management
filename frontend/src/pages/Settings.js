@@ -10,6 +10,7 @@ import Header from '../components/Header';
 
 export default function Settings() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [settings, setSettings] = useState({
