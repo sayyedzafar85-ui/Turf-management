@@ -499,7 +499,11 @@ async def create_booking(booking: BookingCreate, current_user: dict = Depends(ge
             {"turf_name": turf_name, "customer_mobile": booking.customer_mobile},
             {
                 "$inc": {"visit_count": 1, "total_spent": booking.total_amount},
-                "$set": {"last_booking_date": booking.date}
+                "$set": {
+                    "last_booking_date": booking.date,
+                    "customer_name": booking.customer_name,
+                    "email": booking.customer_email
+                }
             }
         )
     else:
@@ -507,6 +511,7 @@ async def create_booking(booking: BookingCreate, current_user: dict = Depends(ge
             "turf_name": turf_name,
             "customer_name": booking.customer_name,
             "customer_mobile": booking.customer_mobile,
+            "email": booking.customer_email,
             "visit_count": 1,
             "total_spent": booking.total_amount,
             "last_booking_date": booking.date
