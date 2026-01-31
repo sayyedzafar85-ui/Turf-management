@@ -18,6 +18,7 @@ export default function BookingManagement() {
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_mobile: '',
+    customer_email: '',
     total_amount: '',
     advance_paid: '',
     payment_mode: 'Cash',
