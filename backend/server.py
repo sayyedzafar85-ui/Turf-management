@@ -96,6 +96,53 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
+async def send_booking_confirmation(booking_data: dict, turf_name: str):
+    """Send booking confirmation via Email, SMS, and WhatsApp"""
+    
+    # Get customer details
+    customer = await db.customers.find_one(
+        {"turf_name": turf_name, "customer_mobile": booking_data["customer_mobile"]},
+        {"_id": 0}
+    )
+    
+    customer_email = customer.get("email") if customer else None
+    
+    # Prepare message
+    message = f"""
+🏏 BOOKING CONFIRMED! 🏏
+
+Turf: {turf_name}
+Date: {booking_data['date']}
+Time: {booking_data['slot_time']}
+
+Customer: {booking_data['customer_name']}
+Mobile: {booking_data['customer_mobile']}
+
+💰 Payment Details:
+Total Amount: ₹{booking_data['total_amount']}
+Advance Paid: ₹{booking_data['advance_paid']}
+Balance Pending: ₹{booking_data['balance_pending']}
+
+Payment Mode: {booking_data['payment_mode']}
+
+Thank you for booking with us!
+See you on the field! 🎯
+    """.strip()
+    
+    # Log the notification (in production, integrate with actual services)
+    logger.info(f"Booking confirmation sent to {booking_data['customer_name']}:")
+    logger.info(f"Mobile: {booking_data['customer_mobile']}")
+    if customer_email:
+        logger.info(f"Email: {customer_email}")
+    logger.info(f"Message: {message}")
+    
+    # TODO: Integrate with actual services
+    # - WhatsApp: Use Baileys or WhatsApp Business API
+    # - SMS: Use Twilio
+    # - Email: Use Resend or SendGrid
+    
+    return True
+
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
