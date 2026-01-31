@@ -72,6 +72,7 @@ class BookingCreate(BaseModel):
     slot_time: str  # HH:MM
     customer_name: str
     customer_mobile: str
+    customer_email: Optional[str] = None
     total_amount: float
     advance_paid: float
     payment_mode: str  # Cash, UPI, Card
