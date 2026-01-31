@@ -17,6 +17,7 @@ import StaffManagement from './pages/StaffManagement';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
+import NotificationSettings from './pages/NotificationSettings';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
